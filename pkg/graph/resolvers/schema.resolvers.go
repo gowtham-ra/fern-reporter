@@ -6,7 +6,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 	"github.com/guidewire/fern-reporter/pkg/db"
 	"github.com/guidewire/fern-reporter/pkg/graph/generated"
 	"github.com/guidewire/fern-reporter/pkg/graph/modelv2"
@@ -14,16 +13,16 @@ import (
 
 // TestRuns is the resolver for the testRuns field.
 func (r *queryResolver) TestRuns(ctx context.Context) ([]*modelv2.TestRun, error) {
-	fmt.Println("***************TestRuns")
 	var testRuns []*modelv2.TestRun
 	r.DB.Find(&testRuns)
 	return testRuns, nil
-	//panic(fmt.Errorf("not implemented: TestRuns - testRuns"))
 }
 
 // TestRun is the resolver for the testRun field.
 func (r *queryResolver) TestRun(ctx context.Context, testRunFilter modelv2.TestRunFilter) ([]*modelv2.TestRun, error) {
-	panic(fmt.Errorf("not implemented: TestRun - testRun"))
+	var testRuns []*modelv2.TestRun
+	db.GetDb().Preload("SuiteRuns.SpecRuns").Where("id = ?", testRunFilter.ID).Where("test_project_name = ?", testRunFilter.TestProjectName).Find(&testRuns)
+	return testRuns, nil
 }
 
 // TestRunByID is the resolver for the testRunById field.
