@@ -1,17 +1,17 @@
 package main
 
 import (
-	"gin_graphql/graph"
+	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/guidewire/fern-reporter/pkg/graph/generated"
+	"github.com/guidewire/fern-reporter/pkg/graph/resolvers"
+	"gorm.io/gorm"
 	"html/template"
 	"log"
 
 	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/guidewire/fern-reporter/config"
 	"github.com/guidewire/fern-reporter/pkg/api/routers"
 	"github.com/guidewire/fern-reporter/pkg/db"
-	"github.com/guidewire/fern-reporter/pkg/graph/generated"
-
 	"time"
 
 	"embed"
@@ -62,6 +62,9 @@ func initServer() {
 
 	// router.LoadHTMLGlob("pkg/views/*")
 	routers.RegisterRouters(router)
+
+	router.POST("/query", GraphqlHandler(db.GetDb()))
+	router.GET("/", PlaygroundHandler("/query"))
 	err = router.Run(serverConfig.Port)
 	if err != nil {
 		log.Fatalf("error starting routes: %v", err)
@@ -74,17 +77,21 @@ func PlaygroundHandler(path string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		h.ServeHTTP(c.Writer, c.Request)
 	}
+
+	//return nil
 }
 
-func GraphqlHandler() gin.HandlerFunc {
-	c := generated.Config{Resolvers: &graph.Resolver{}}
+func GraphqlHandler(gormdb *gorm.DB) gin.HandlerFunc {
+	//c := generated.Config{Resolvers: &graph.Resolver{}}
+	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers.Resolver{DB: gormdb}}))
+
 	// Schema Directive
 
 	// srv := glmiddleware.AuthMiddleware(handler.NewDefaultServer(generated.NewExecutableSchema(c)))
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(c))
+	//srv := handler.NewDefaultServer(generated.NewExecutableSchema(c))
 
 	return func(c *gin.Context) {
-		srv.ServeHTTP(c.Writer, c.Request)
+		h.ServeHTTP(c.Writer, c.Request)
 	}
 }
 

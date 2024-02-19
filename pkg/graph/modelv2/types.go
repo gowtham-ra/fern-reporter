@@ -31,12 +31,12 @@ type Tag struct {
 }
 
 type TestRun struct {
-	ID              int         `json:"id"`
-	TestProjectName string      `json:"testProjectName"`
-	TestSeed        int         `json:"testSeed"`
-	StartTime       string      `json:"startTime"`
-	EndTime         string      `json:"endTime"`
-	SuiteRuns       []*SuiteRun `json:"suiteRuns"`
+	ID              int    `json:"id"`
+	TestProjectName string `json:"testProjectName"`
+	TestSeed        int    `json:"testSeed"`
+	StartTime       string `json:"startTime"`
+	EndTime         string `json:"endTime"`
+	//SuiteRuns       []*SuiteRun `json:"suiteRuns"`
 }
 
 type TestRunFilter struct {

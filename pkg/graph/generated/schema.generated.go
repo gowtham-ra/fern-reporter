@@ -1365,7 +1365,8 @@ func (ec *executionContext) _TestRun_suiteRuns(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.SuiteRuns, nil
+		//return obj.SuiteRuns, nil
+		return nil, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)

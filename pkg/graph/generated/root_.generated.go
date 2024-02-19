@@ -415,7 +415,7 @@ input TestRunFilter {
   testProjectName: String!
 }
 
-extend type Query {
+type Query {
   testRuns: [TestRun]!
   testRun(testRunFilter: TestRunFilter!): [TestRun!]!
   testRunById(id: Int!): TestRun
