@@ -77,18 +77,10 @@ func PlaygroundHandler(path string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		h.ServeHTTP(c.Writer, c.Request)
 	}
-
-	//return nil
 }
 
 func GraphqlHandler(gormdb *gorm.DB) gin.HandlerFunc {
-	//c := generated.Config{Resolvers: &graph.Resolver{}}
 	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers.Resolver{DB: gormdb}}))
-
-	// Schema Directive
-
-	// srv := glmiddleware.AuthMiddleware(handler.NewDefaultServer(generated.NewExecutableSchema(c)))
-	//srv := handler.NewDefaultServer(generated.NewExecutableSchema(c))
 
 	return func(c *gin.Context) {
 		h.ServeHTTP(c.Writer, c.Request)
